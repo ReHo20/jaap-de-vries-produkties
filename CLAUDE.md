@@ -1,4 +1,4 @@
-# esther-tierie
+# jaap-de-vries-produkties
 
 A client site. Bedrock host, Gutenberg with ACF Blocks V3, Timber 2 templating. The
 theme is [Sightline](https://github.com/Giraffes4Zebras/sightline), installed by Composer

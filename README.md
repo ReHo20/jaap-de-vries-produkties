@@ -1,4 +1,4 @@
-# esther-tierie
+# jaap-de-vries-produkties
 
 A client site. Bedrock on WordPress 7.1 / PHP 8.1, Gutenberg with ACF Blocks V3, Timber 2
 templating. The theme is [Sightline](https://github.com/Giraffes4Zebras/sightline),
@@ -11,10 +11,11 @@ code; Sightline itself never will.
 ## Relationship to the base
 
 This started as a clone of
-[`base-wordpress-v2`](https://github.com/Giraffes4Zebras/base-wordpress-v2), stripped to
-host Sightline. `packages/theme-kit`, `web/app/themes/base-theme`, the PHPUnit suite, the
-Twig linter and the whole Node build were removed, because Sightline brings its own and
-is linted and built in its own repository.
+[`esther-tierie`](https://github.com/Giraffes4Zebras/esther-tierie), which in turn came
+from [`base-wordpress-v2`](https://github.com/Giraffes4Zebras/base-wordpress-v2),
+stripped to host Sightline. `packages/theme-kit`, `web/app/themes/base-theme`, the
+PHPUnit suite, the Twig linter and the whole Node build were removed, because Sightline
+brings its own and is linted and built in its own repository.
 
 `bin/init-project.php` went with them. It renamed a theme directory this repository
 owned, and Sightline is a Composer dependency with a fixed installer name — so there was
@@ -78,7 +79,7 @@ fail to resolve there while working locally.
 
 ```shell
 # 1  Serve the project. Herd detects Bedrock and uses web/ as the document root.
-herd link esther-tierie
+herd link jaap-de-vries-produkties
 
 # 2  Set this site's PHP version to 8.1 in the Herd UI (or `herd php:8.1`).
 
@@ -94,7 +95,7 @@ composer install
 # 5  Generate authentication keys and salts.
 composer generate-salts >> .env
 
-# 6  Run the WordPress installer at http://esther-tierie.test
+# 6  Run the WordPress installer at http://jaap-de-vries-produkties.test
 
 # 7  Set pretty permalinks. WordPress defaults a fresh install to plain ?p= URLs, and
 #    the search template never renders under those — /search/<term>/ does not route,
@@ -122,7 +123,7 @@ over the installed copy instead:
 
 ```shell
 rm -rf web/app/themes/sightline
-ln -s /c/wamp64/www/g4z-theme/sightline web/app/themes/sightline
+ln -s ~/Sites/sightline web/app/themes/sightline   # path to your Sightline clone
 ```
 
 `composer install` and `composer update` replace the symlink with the real package. That

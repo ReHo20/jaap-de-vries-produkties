@@ -1,6 +1,6 @@
 # Issue tracker: GitHub
 
-Issues and PRDs for this repo live as GitHub issues on `Giraffes4Zebras/esther-tierie`. Use the `gh` CLI for all operations. Theme issues belong on `Giraffes4Zebras/sightline` instead.
+Issues and PRDs for this repo live as GitHub issues on `ReHo20/jaap-de-vries-produkties`. Use the `gh` CLI for all operations. Theme issues belong on `Giraffes4Zebras/sightline` instead.
 
 ## Conventions
 
