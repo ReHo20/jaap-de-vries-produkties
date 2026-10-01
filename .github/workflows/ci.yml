@@ -1,0 +1,82 @@
+# CI for this site.
+#
+# Every action is pinned to a SHA, and check-platform-reqs runs BEFORE install so it
+# reads the lock against the runner's real PHP and never touches the ACF licence server.
+#
+# The matrix spans the floor to the ceiling: 8.1 is what the server runs and what
+# composer.json's platform pin resolves against, 8.3 is where the hosts are headed, and
+# 8.5 proves there is headroom beyond that. Nothing runs on 8.2 or 8.4, which is fine —
+# a package that breaks between two legs breaks on one of them.
+#
+# What runs here is PHP-only, and deliberately so — see the note at the end of the job.
+
+name: CI
+
+on:
+  push:
+    branches: ['**']
+
+# A new push to a branch supersedes the run already in flight for it.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        php-version: ['8.1', '8.3', '8.5']
+    steps:
+      - name: Setup PHP
+        uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240  # v2.37.2
+        with:
+          php-version: ${{ matrix.php-version }}
+          extensions: curl, json, simplexml, gd, zip, iconv, ctype, dom, fileinfo, mbstring, xml, xmlreader, xmlwriter, zlib, intl
+
+      - name: Checkout repository
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0  # v7.0.0
+        with:
+          fetch-depth: '1'
+          persist-credentials: false
+
+      # Asserts the LOCKED package set against the runner's real PHP. Reads the lock
+      # directly, so it runs before install: it fails fast, names the offending package,
+      # and never touches the ACF licence server. Critically it ignores composer.lock
+      # platform-overrides, which would otherwise let a lock resolved against a phantom
+      # PHP pass both matrix legs.
+      - name: Check platform requirements
+        run: composer check-platform-reqs
+
+      # --no-check-all / --no-check-publish keep this to schema + lock-hash problems.
+      # Bare --strict also fails on style warnings that are not defects in a site repo.
+      - name: Validate composer.json / composer.lock
+        run: composer validate --strict --no-check-all --no-check-publish
+
+      # No -q: it suppresses the reason for resolution failures and the "lock file is not
+      # up to date" warning, which turns every red build into lockfile forensics.
+      - name: Install dependencies
+        run: composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+        env:
+          COMPOSER_AUTH: '{"http-basic":{"connect.advancedcustomfields.com":{"username":"${{ secrets.ACF_PRO_LICENSE_KEY }}","password":"http://localhost"}}}'
+
+      # Each gate is its own step so a red build names what broke rather than "lint
+      # failed". They run through the same composer scripts a developer runs locally,
+      # so there is one definition of each gate rather than two that can drift.
+      - name: PHPStan
+        run: composer analyse
+
+      - name: PHP-CS-Fixer
+        run: composer cs
+
+      # Rector is deliberately absent: rector/rector 2.4.6 crashes on startup against
+      # phpstan/phpstan 2.2.8, and no available combination satisfies both. The config
+      # is kept and the reasoning is in rector.php. See issue #12.
+
+      # There is no Twig, asset-build or dist/ freshness gate, and no Node at all,
+      # because this repository owns no theme source: Sightline arrives built from
+      # satis and is linted and built by its own CI. Reinstate them here pointed at
+      # the child theme once that theme exists.

@@ -1,0 +1,36 @@
+# Security-only and grouped. Ungrouped update-everything PRs generate enough daily noise
+# across the fleet that a team learns to ignore Dependabot entirely — including the
+# security PRs that matter.
+
+version: 2
+
+updates:
+  - package-ecosystem: composer
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      composer-security:
+        applies-to: security-updates
+        patterns: ['*']
+    # Everything non-security is deliberately ignored: WordPress core, plugins and the
+    # theme stack move on our schedule, verified against a running site, not on
+    # Dependabot's.
+    ignore:
+      - dependency-name: '*'
+        update-types:
+          - version-update:semver-major
+          - version-update:semver-minor
+          - version-update:semver-patch
+
+  # No npm ecosystem: the repository contains no JavaScript project. Sightline's own
+  # repository watches its dependencies. Add a block here when the child theme lands.
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    groups:
+      actions:
+        patterns: ['*']

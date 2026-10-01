@@ -1,0 +1,155 @@
+{
+  "name": "g4z/esther-tierie",
+  "type": "project",
+  "license": "proprietary",
+  "description": "Esther Tierie — Bedrock host for the Sightline theme",
+  "homepage": "https://github.com/Giraffes4Zebras/esther-tierie",
+  "keywords": [
+    "acf",
+    "bedrock",
+    "composer",
+    "gutenberg",
+    "timber",
+    "wordpress",
+    "wp"
+  ],
+  "config": {
+    "optimize-autoloader": true,
+    "preferred-install": "dist",
+    "sort-packages": true,
+    "platform": {
+      "php": "8.1.0"
+    },
+    "allow-plugins": {
+      "composer/installers": true,
+      "koodimonni/composer-dropin-installer": true,
+      "phpstan/extension-installer": true,
+      "roots/wordpress-core-installer": true
+    }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://wpackagist.org",
+      "only": [
+        "wpackagist-plugin/*",
+        "wpackagist-theme/*"
+      ]
+    },
+    {
+      "type": "composer",
+      "url": "https://wp-languages.github.io"
+    },
+    {
+      "type": "composer",
+      "url": "https://connect.advancedcustomfields.com"
+    },
+    {
+      "type": "composer",
+      "url": "https://satis.provenwebdevelopers.nl",
+      "only": [
+        "g4z-plugin/*",
+        "g4z-theme/*",
+        "g4z/*"
+      ]
+    }
+  ],
+  "require": {
+    "php": "^8.1",
+    "ext-curl": "*",
+    "ext-fileinfo": "*",
+    "ext-json": "*",
+    "ext-mbstring": "*",
+    "ext-zip": "*",
+    "composer/installers": "2.3.*",
+    "g4z-plugin/g4z-gtm-wp-plugin": "0.1.*",
+    "g4z-plugin/g4z-snippets": "1.0.*",
+    "g4z-plugin/g4z-utilities": "1.4.*",
+    "g4z-plugin/g4z-watchdog": "0.3.*",
+    "g4z-theme/sightline": "dev-develop",
+    "koodimonni-language/core-nl_nl": "7.1.*",
+    "oscarotero/env": "2.1.*",
+    "roots/bedrock-autoloader": "1.1.*",
+    "roots/bedrock-disallow-indexing": "2.0.*",
+    "roots/wordpress": "7.1.*",
+    "roots/wp-config": "1.0.0",
+    "timber/timber": "2.3.*",
+    "twig/twig": "3.27.*",
+    "vlucas/phpdotenv": "5.6.*",
+    "wpackagist-plugin/acf-content-analysis-for-yoast-seo": "3.2.*",
+    "wpackagist-plugin/better-search-replace": "1.4.*",
+    "wpackagist-plugin/contact-form-7": "6.1.*",
+    "wpackagist-plugin/duplicate-post": "4.6.*",
+    "wpackagist-plugin/flamingo": "2.6.*",
+    "wpackagist-plugin/post-types-order": "2.4.*",
+    "wpackagist-plugin/tiny-compress-images": "3.6.*",
+    "wpackagist-plugin/webp-express": "0.25.*",
+    "wpackagist-plugin/wordpress-seo": "27.*",
+    "wpengine/advanced-custom-fields-pro": "6.8.*"
+  },
+  "require-dev": {
+    "friendsofphp/php-cs-fixer": "3.95.*",
+    "php-stubs/acf-pro-stubs": "^6.0",
+    "phpstan/extension-installer": "^1.4",
+    "phpstan/phpstan": "^2.2",
+    "rector/rector": "2.4.*",
+    "roave/security-advisories": "dev-latest",
+    "szepeviktor/phpstan-wordpress": "^2.0"
+  },
+  "suggest": {
+    "wp-media/wp-rocket": "Page cache, in the version this base is documented against (3.21.*). Add it per client, when that client has a licence: composer require wp-media/wp-rocket:3.21.* — then configure it as docs/deploying.md sets out, because the defaults break script modules. The base does not require it, so a clone installs and runs without one."
+  },
+  "extra": {
+    "installer-paths": {
+      "web/app/mu-plugins/{$name}/": [
+        "type:wordpress-muplugin",
+        "wpengine/advanced-custom-fields-pro"
+      ],
+      "web/app/plugins/{$name}/": [
+        "type:wordpress-plugin"
+      ],
+      "web/app/themes/{$name}/": [
+        "type:wordpress-theme"
+      ]
+    },
+    "wordpress-install-dir": "web/wp",
+    "dropin-paths": {
+      "web/app/languages/": [
+        "vendor:koodimonni-language"
+      ],
+      "web/app/languages/plugins/": [
+        "vendor:koodimonni-plugin-language"
+      ],
+      "web/app/languages/themes/": [
+        "vendor:koodimonni-theme-language"
+      ]
+    }
+  },
+  "scripts": {
+    "generate-salts": "@php bin/generate-salts.php",
+    "copy-advanced-cache": "@php bin/copy-advanced-cache.php",
+    "analyse": "phpstan --no-progress --memory-limit=2G",
+    "cs": "php-cs-fixer fix --dry-run --diff",
+    "lint": [
+      "@composer check-platform-reqs",
+      "@composer validate --strict --no-check-all --no-check-publish",
+      "@analyse",
+      "@cs"
+    ],
+    "fix": [
+      "php-cs-fixer fix"
+    ],
+    "post-install-cmd": [
+      "@copy-advanced-cache"
+    ],
+    "post-update-cmd": [
+      "@copy-advanced-cache"
+    ]
+  },
+  "scripts-descriptions": {
+    "lint": "Every gate CI runs, in the same order. Run this before pushing.",
+    "fix": "Apply everything that can be fixed automatically."
+  }
+}

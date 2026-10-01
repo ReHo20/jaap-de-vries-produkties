@@ -1,0 +1,20 @@
+# Production (Apache) only. Herd serves this project with nginx and detects
+# Bedrock's web/ document root natively, so nothing here applies locally.
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+    RewriteCond %{REQUEST_URI} !web/
+    RewriteRule (.*) /web/$1 [L]
+
+    RewriteRule ^index\.php$ - [L]
+
+    # add a trailing slash to /wp-admin
+    RewriteRule ^wp-admin$ wp-admin/ [R=301,L]
+
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+    RewriteRule ^([_0-9a-zA-Z-]+/)?(wp-(content|admin|includes).*) web/wp/$2 [L]
+    RewriteRule ^([_0-9a-zA-Z-]+/)?(.*\.php)$ web/wp/$2 [L]
+    RewriteRule . index.php [L]
+</IfModule>

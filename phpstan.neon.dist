@@ -1,0 +1,17 @@
+# szepeviktor/phpstan-wordpress is wired in by phpstan/extension-installer — including
+# it explicitly as well makes PHPStan load it twice and warn.
+parameters:
+    # Level 8 rather than v1's level 5. The code here is greenfield and largely
+    # LLM-authored, and level 5 misses most of what an LLM gets wrong — chiefly null
+    # handling and unspecified array shapes.
+    level: 8
+
+    paths:
+        - bin
+
+    # ACF Pro is a licensed package that may be absent (CI resolves it from a secret;
+    # a contributor without the credential still needs analysis to run). The stubs are
+    # a dev-dependency precisely so static analysis never depends on a successful
+    # download from connect.advancedcustomfields.com.
+    scanFiles:
+        - vendor/php-stubs/acf-pro-stubs/acf-pro-stubs.php

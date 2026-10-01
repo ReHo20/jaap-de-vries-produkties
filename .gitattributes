@@ -1,0 +1,31 @@
+# Normalize line endings to LF in the repository AND in working copies, regardless of
+# each developer's core.autocrlf. The fleet deploys to Linux, and from Phase 3 the
+# theme's built dist/ is committed — without this, a Windows checkout rewrites every
+# bundle and produces spurious diffs on the next build.
+* text=auto eol=lf
+
+# Windows-only tooling that genuinely wants CRLF.
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Binary — never normalize, never diff as text.
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.ico   binary
+*.webp  binary
+*.avif  binary
+*.woff  binary
+*.woff2 binary
+*.ttf   binary
+*.otf   binary
+*.eot   binary
+*.zip   binary
+*.gz    binary
+*.pdf   binary
+*.mo    binary
+
+# Keep generated/vendored files out of diffs and language stats.
+composer.lock  -diff linguist-generated
+package-lock.json -diff linguist-generated

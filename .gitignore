@@ -1,0 +1,67 @@
+# Application
+web/app/mu-plugins/*/
+!web/app/mu-plugins/bedrock-autoloader.php
+!web/app/mu-plugins/dev-mail-logger.php
+web/app/upgrade
+web/app/languages/*
+!web/app/languages/.gitkeep
+web/app/uploads/*
+!web/app/uploads/.gitkeep
+web/app/cache/*
+web/app/advanced-cache.php
+web/app/debug.log
+**/twenty*
+
+# WordPress core (Composer-managed)
+web/wp
+web/.htaccess
+
+# Plugins (Composer-managed)
+web/app/plugins/*
+
+# Sightline (Composer-managed). Named rather than ignoring web/app/themes/*, because
+# the child theme on top of it is this repository's own code and must stay tracked.
+web/app/themes/sightline/
+
+# Dotenv
+.env
+.env.*
+!.env.example
+
+# Composer
+vendor/
+
+# Credentials — backstop only. The ACF key belongs in global Composer auth,
+# never in a repo.
+auth.json
+
+# Theme build tooling
+node_modules
+.vite-hot
+cache/twig
+web/app/themes/*/cache
+
+# Tool caches
+.php-cs-fixer.cache
+
+# WebP Express
+web/app/themes/.htaccess
+web/app/webp-express
+
+# WP Rocket
+web/app/wp-rocket-config/*
+
+# IntelliJ / PhpStorm
+.idea
+*.iml
+out
+gen
+
+# macOS
+.DS_Store
+
+**/*.log
+
+# Claude Code
+.claude/*.local.*
+.claude/worktrees
